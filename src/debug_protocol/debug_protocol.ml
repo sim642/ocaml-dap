@@ -318,15 +318,6 @@ module Module = struct
   [@@deriving make, yojson {strict = false}]
 end
 
-module Modules_view_descriptor = struct
-  (** The ModulesViewDescriptor is the container for all declarative configuration options of a module view.
-  For now it only specifies the columns to be shown in the modules view. *)
-  type t = {
-    columns : Column_descriptor.t list;
-  }
-  [@@deriving make, yojson {strict = false}]
-end
-
 module Thread = struct
   (** A Thread *)
   type t = {
@@ -2167,8 +2158,10 @@ module Variables_command = struct
     type t = {
       variables_reference : int [@key "variablesReference"]; (** The variable for which to retrieve its children. The `variablesReference` must have been obtained in the current suspended state. See 'Lifetime of Object References' in the Overview section for details. *)
       filter : Filter.t option [@default None]; (** Filter to limit the child variables to either named or indexed. If omitted, both types are fetched. *)
-      start : int option [@default None]; (** The index of the first variable to return; if omitted children start at 0. *)
-      count : int option [@default None]; (** The number of variables to return. If count is missing or 0, all variables are returned. *)
+      start : int option [@default None]; (** The index of the first variable to return; if omitted children start at 0.
+      The attribute is only honored by a debug adapter if the corresponding capability `supportsVariablePaging` is true. *)
+      count : int option [@default None]; (** The number of variables to return. If count is missing or 0, all variables are returned.
+      The attribute is only honored by a debug adapter if the corresponding capability `supportsVariablePaging` is true. *)
       format : Value_format.t option [@default None]; (** Specifies details on how to format the Variable values.
       The attribute is only honored by a debug adapter if the corresponding capability `supportsValueFormattingOptions` is true. *)
     }
